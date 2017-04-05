@@ -1,1 +1,0 @@
-Repositório do EP1, projeto da disciplina de OO da FGA, do semestre 1/2017. 
