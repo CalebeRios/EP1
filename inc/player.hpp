@@ -3,6 +3,8 @@
 
 #include "gameobject.hpp"
 
+using namespace std;
+
 class Player : public GameObject{
 private:
 	bool alive;

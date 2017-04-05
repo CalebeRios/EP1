@@ -1,15 +1,15 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
-#include <string>
+using namespace std;
 
 class GameObject{
 private:
 	int positionX;
-	int PositionY;
+	int positionY;
 	char sprite;
 public:
-	virtual GameObject() = 0;
+	GameObject();
 	~GameObject();
 
 	void setPositionX(int);
@@ -20,6 +20,6 @@ public:
 
 	void setSprite(char);
 	char getSprite();
-}
+};
 
 #endif

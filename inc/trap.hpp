@@ -3,6 +3,8 @@
 
 #include "gameobject.hpp"
 
+using namespace std;
+
 class Trap : public GameObject{
 private:
 	int damage;

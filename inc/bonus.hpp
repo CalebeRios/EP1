@@ -3,6 +3,8 @@
 
 #include "gameobject.hpp"
 
+using namespace std;
+
 class Bonus : public GameObject{
 private:
 	int score;
