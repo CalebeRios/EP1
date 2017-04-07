@@ -1,27 +1,27 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "gameobject.hpp"
+#include "character.hpp"
 
 using namespace std;
 
-class Player : public GameObject{
+class Player : public Character{
 private:
-	bool alive;
 	int score;
 	bool winner;
+//	char nome[30];
 public:
 	Player();
 	~Player();
-
-	void setAlive(bool);
-	bool getAlive();
 
 	void setScore(int);
 	int getScore();
 
 	void setWinner(bool);
 	bool getWinner();
+
+/*	void setNome(char*);
+	char *getNome();*/
 };
 
 #endif

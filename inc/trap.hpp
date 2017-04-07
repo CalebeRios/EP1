@@ -10,6 +10,7 @@ private:
 	int damage;
 public:
 	Trap();
+	Trap(int, int);
 	~Trap();
 
 	void setDamage(int);

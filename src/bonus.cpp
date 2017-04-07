@@ -9,6 +9,13 @@ Bonus::Bonus(){
 	setBonus(0);
 }
 
+Bonus::Bonus(int X, int Y){
+	setPositionX(X);
+	setPositionY(Y);
+	setSprite('$');
+	setBonus(0);
+}
+
 Bonus::~Bonus(){}
 
 void Bonus::setBonus(int score){

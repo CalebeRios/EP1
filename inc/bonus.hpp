@@ -10,6 +10,7 @@ private:
 	int score;
 public:
 	Bonus();
+	Bonus(int, int);
 	~Bonus();
 
 	void setBonus(int);

@@ -18,6 +18,8 @@ public:
 	int getCol();
 
 	void imprimir_mapa();
+
+	bool caractere(int, int, char);
 };
 
 #endif

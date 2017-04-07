@@ -9,6 +9,13 @@ Trap::Trap(){
 	setDamage(1);
 }
 
+Trap::Trap(int X, int Y){
+	setPositionX(X);
+	setPositionY(Y);
+	setSprite('&');
+	setDamage(1);
+}
+
 Trap::~Trap(){}
 
 void Trap::setDamage(int damage){
