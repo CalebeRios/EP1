@@ -28,10 +28,10 @@ bool Player::getWinner(){
 	return winner;
 }
 
-/*void Player::setNome(char nome[]){
+void Player::setNome(char *nome){
 	this->nome = nome;
 }
 
-char* Player::getNome(){
+char * Player::getNome(){
 	return nome;
-}*/
+}

@@ -10,8 +10,10 @@ public:
 	Character();
 	~Character();
 
-	void setLife(bool);
-	bool getLife();
+	void setLife(int);
+	int getLife();
+
+	void life_d(int);
 };
 
 #endif

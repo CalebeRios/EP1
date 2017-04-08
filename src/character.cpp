@@ -1,3 +1,5 @@
+#include <ncurses.h>
+
 #include "../inc/character.hpp"
 
 using namespace std;
@@ -11,9 +13,18 @@ Character::Character(){
 
 Character::~Character(){}
 
-void Character::setLife(bool life){
+void Character::setLife(int life){
 	this->life = life;
 }
-bool Character::getLife(){
+int Character::getLife(){
 	return life;
+}
+
+void Character::life_d(int life){
+	if(life == 1)
+		mvprintw(0, 37, "*\n");
+	else if(life == 2)
+		mvprintw(0, 37, "**\n");
+	else if(life == 3)
+		mvprintw(0, 37, "***\n");
 }

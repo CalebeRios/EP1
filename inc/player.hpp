@@ -9,7 +9,7 @@ class Player : public Character{
 private:
 	int score;
 	bool winner;
-//	char nome[30];
+	char *nome;
 public:
 	Player();
 	~Player();
@@ -20,8 +20,8 @@ public:
 	void setWinner(bool);
 	bool getWinner();
 
-/*	void setNome(char*);
-	char *getNome();*/
+	void setNome(char*);
+	char * getNome();
 };
 
 #endif
