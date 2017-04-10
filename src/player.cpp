@@ -3,13 +3,13 @@
 using namespace std;
 
 Player::Player(){
-	setPositionX(19);
-	setPositionY(39);
+	setPositionX(2);
+	setPositionY(1);
 	setSprite('@');
 	setLife(3);
 	setScore(0);
 	setWinner(false);
-	//setNome("");
+	//setNome();
 }
 
 Player::~Player(){}

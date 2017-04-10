@@ -8,8 +8,8 @@ using namespace std;
 int k = 0;
 
 Mapa::Mapa(){
-	setRow(19);
-	setCol(39);
+	setRow(25);
+	setCol(47);
 }
 
 Mapa::~Mapa(){}
@@ -28,18 +28,18 @@ int Mapa::getCol(){
 	return col;
 }
 
-void Mapa::imprimir_mapa(){
+void Mapa::imprimir_mapa_1(){
 	initscr();
 
 	ifstream fp;
 	char ch;
 
-	fp.open("../doc/mapa.txt");
+	fp.open("../doc/mapa_1.txt");
 
 	move(1, 0);
 
-	for(int i = 0; i <= 20; ++i){
-		for(int j = 0; j < 39; ++j){
+	for(int i = 1; i <= 25; ++i){
+		for(int j = 1; j <= 49; ++j){
 			k++;
 			fp.get(ch);
 			printw("%c", ch);

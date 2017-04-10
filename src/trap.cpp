@@ -5,14 +5,14 @@ using namespace std;
 Trap::Trap(){
 	setPositionX(0);
 	setPositionY(0);
-	setSprite('&');
+	setSprite('*');
 	setDamage(1);
 }
 
 Trap::Trap(int X, int Y){
 	setPositionX(X);
 	setPositionY(Y);
-	setSprite('&');
+	setSprite('*');
 	setDamage(1);
 }
 

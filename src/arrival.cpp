@@ -1,8 +1,8 @@
 #include "../inc/arrival.hpp"
 
 Arrival::Arrival(){
-	setPositionX(2);
-	setPositionY(1);
+	setPositionX(45);
+	setPositionY(24);
 	setSprite('#');
 }
 
