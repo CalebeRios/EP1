@@ -353,7 +353,7 @@ void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 		if(player->getWinner()){
 			int opc;
 
-			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 22) / 2, "  Parabens! Você ganhou.\n       Para voltar ao menu pressione <q>\n      ou para continuar pressione <enter>.                 ");
+			mvprintw((mapa_1->getRow() + 1) / 2, 0, "            Parabens! Você ganhou.            \n       Para voltar ao menu pressione <q>\n      ou para continuar pressione <enter>.                 ");
 			refresh();
 
 			player->setWinner(false);
@@ -472,7 +472,7 @@ void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 				break;
 		
 			case KEY_RIGHT:
-				if(mvinch(row, col + 1) == '-' || mvinch(row, col + 1) == '|' || col == mapa_1->getCol())
+				if(mvinch(row, col + 1) == '-' || mvinch(row, col + 1) == '|')
 					refresh();
 				else{
 					if(mvinch(row, col + 1) == '$')
@@ -563,6 +563,7 @@ void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 		mvprintw(0, 0, "Score: %d", player->getScore());
 		mvprintw(0, 50, "Life: ");
 		player->life_d_2(player->getLife());
+		refresh();
 
 		if(ch == 'q' || ch == 'Q'){
 			menu(player, bonus, trap, mapa_1, arrival);
@@ -572,7 +573,7 @@ void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 		if(player->getWinner()){
 			inser_ranking(player);
 
-			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 22) / 2, "Parabens! Você ganhou.");
+			mvprintw(16, 0, "                   Parabens! Você ganhou.                   ");
 			refresh();
 
 			player->setLife(3);
@@ -585,9 +586,9 @@ void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 		}
 
 		if(player->getLife() == 0){
-			mvprintw(mapa_1->getRow() / 2, (mapa_1->getCol() - 9) / 2, "You lose!");
-			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 36) / 2, "Aperte <enter> para jogar novamente,");
-			mvprintw((mapa_1->getRow() + 3) / 2, (mapa_1->getCol() - 24) / 2, "ou aperte <q> para sair!");
+			mvprintw(16, 0, "                          You lose!                         ");
+			mvprintw(17, 0, "            Aperte <enter> para jogar novamente,            ");
+			mvprintw(18, 0, "                  ou aperte <q> para sair!                  ");
 
 			opt = getch();
 

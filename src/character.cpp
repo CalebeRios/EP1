@@ -21,7 +21,9 @@ int Character::getLife(){
 }
 
 void Character::life_d(int life){
-	if(life == 1)
+	if(life == 0)
+		mvprintw(0, 44, "\n");
+	else if(life == 1)
 		mvprintw(0, 44, "*\n");
 	else if(life == 2)
 		mvprintw(0, 44, "**\n");
