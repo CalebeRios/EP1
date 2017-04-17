@@ -1,1 +1,1 @@
-Player		Score
+Player      Score

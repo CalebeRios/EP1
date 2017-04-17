@@ -18,8 +18,7 @@ public:
 	int getCol();
 
 	void imprimir_mapa_1();
-
-	bool caractere(int, int, char);
+	void imprimir_mapa_2();
 };
 
 #endif
