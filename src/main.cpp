@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include <fstream>
 #include <cstdlib>
+#include <unistd.h>
+#define tam_object 30
 
 using namespace std;
 
@@ -12,10 +14,15 @@ using namespace std;
 #include "../inc/arrival.hpp"
 
 void menu(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
-void inser_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
-void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+void inser_object_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+void inser_object_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+void randObject(Bonus *bonus[], int i);
+void randObject(Trap *trap[], int i);
+//void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 void inser_ranking(Player *player);
-void game_loop(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+//void sortRanking();
 
 void erase (int y, int x, char ch) {
  	mvaddch(y, x, ch);
@@ -27,6 +34,10 @@ int length(char *nome){
 		++len;
 	}
 	return len;
+}
+
+int trand(int n){
+	return 1 + (rand()%n);
 }
 
 int main() {
@@ -63,7 +74,7 @@ void menu(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *a
 	printw("2) Ranking\n");
 	printw("0) Sair\n");
 	printw("Opção: ");
-	char nome[30];
+	char nome[7];
 	int opc = getch();
 	char ch;
 
@@ -72,15 +83,29 @@ void menu(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *a
 
 		echo();
 
-		printw("Nome: ");
+		printw("Nome (Máximo 8 caracteres): ");
 		getstr(nome);
+		while(length(nome) > 8 || length(nome) == 0){
+			clear();
+
+			printw("Nome invalido!\nDigite novamente.");
+			getch();
+			refresh();
+
+			clear();
+
+			printw("Nome (Máximo 8 caracteres): ");
+			getstr(nome);
+			
+			refresh();
+		}
 		player->setNome(nome);
 		refresh();
 
 		noecho();
 
-		inser_object(player, bonus, trap, mapa_1, arrival);
-		game_loop(player, bonus, trap, mapa_1, arrival);
+		inser_object_1(player, bonus, trap, mapa_1, arrival);
+		game_loop_1(player, bonus, trap, mapa_1, arrival);
 	}
 	else if(opc == '2'){
 		clear();
@@ -108,7 +133,7 @@ void menu(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *a
 		menu(player, bonus, trap, mapa_1, arrival);
 }
 
-void inser_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
+void inser_object_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
 	clear();
 
 	bonus[0] = new Bonus(20, 45);
@@ -145,7 +170,35 @@ void inser_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Ar
 	mvprintw((mapa_1->getRow() + 1), ((mapa_1->getCol() - 23) / 2), "Aperte <p> para pausar!");
 }
 
-void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
+void randObject(Bonus *bonus[], int i){
+	srand((unsigned) time(NULL));
+
+	bonus[i]->setPositionY(trand(32));
+	bonus[i]->setPositionX(trand(58));
+
+	while(mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '-' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '$' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '|' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '#' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '*' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '+'){
+		bonus[i]->setPositionY(trand(32));
+		bonus[i]->setPositionX(trand(58));
+	}
+
+	mvaddch(bonus[i]->getPositionY(), bonus[i]->getPositionX(), bonus[i]->getSprite());
+}
+
+void randObject(Trap *trap[], int i){
+	srand((unsigned) time(NULL));
+
+	trap[i]->setPositionY(trand(32));
+	trap[i]->setPositionX(trand(58));
+
+	while(mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '-' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '$' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '|' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '#' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '*' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '+'){
+		trap[i]->setPositionY(trand(32));
+		trap[i]->setPositionX(trand(58));
+	}
+
+	mvaddch(trap[i]->getPositionY(), trap[i]->getPositionX(), trap[i]->getSprite());
+}
+
+/*void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
 	player->~Player();
 	trap[0]->~Trap();
 	trap[1]->~Trap();
@@ -157,29 +210,47 @@ void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Ar
 	bonus[2]->~Bonus();
 	mapa_1->~Mapa();
 	arrival->~Arrival();
-}
+}*/
 
 void inser_ranking(Player *player){
 		ofstream ranking;
+		int tam;
 
 		ranking.open("../doc/ranking.txt", ios_base::app);
 
 		ranking.write(player->getNome(), sizeof(player->getNome()));
-		ranking.put('\t');
-		ranking.put('\t');
+		tam = length(player->getNome());
+
+		for(int i = 0; i < 17 - tam; ++i)
+			ranking.put(' ');
+		
 		ranking << player->getScore() << endl;
 		refresh();
 
 		ranking.close();
 }
 
-void game_loop(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
+/*void sortRanking(){
+	ifstream ranking;
+	char nome[8];
+	char nome_aux[8];
+	int i = 1;
+	
+	ranking.open("../doc/ranking.txt");
+
+	while(ranking.eof()){
+		getline(nome);
+		++i;
+	}
+
+	ranking.close();
+}*/
+
+void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
 	int ch = getch();
 	int row = player->getPositionX();
 	int col = player->getPositionY();
 	int opt = ch - 1;
-
-	//player->setLife(0);
 
 	for(;;){
 		mvprintw((mapa_1->getRow() + 1), ((mapa_1->getCol() - 23) / 2), "Aperte <p> para pausar!");
@@ -280,22 +351,37 @@ void game_loop(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arriv
 		}
 
 		if(player->getWinner()){
-			inser_ranking(player);
+			int opc;
 
-			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 22) / 2, "Parabens! Você ganhou.");
+			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 22) / 2, "  Parabens! Você ganhou.\n       Para voltar ao menu pressione <q>\n      ou para continuar pressione <enter>.                 ");
 			refresh();
 
-			player->setLife(3);
-			player->setScore(0);
+			player->setWinner(false);
 
-			getch();
+			opc = getch();
 
-			menu(player, bonus, trap, mapa_1, arrival);
+			if(opc == 'q' || opc == 'Q'){
+				inser_ranking(player);
+				menu(player, bonus, trap, mapa_1, arrival);
+			}
+
+			clear();
+
+			mvprintw(10, 15, "Fase 2");
+			refresh();
+
+			sleep(2);
+
+			Trap *trap[tam_object];
+			Bonus *bonus[tam_object];
+
+			inser_object_2(player, bonus, trap, mapa_1, arrival);
+			game_loop_2(player, bonus, trap, mapa_1, arrival);
+
 			return;
 		}
 
 		if(player->getLife() == 0){
-			inser_ranking(player);
 			mvprintw(mapa_1->getRow() / 2, (mapa_1->getCol() - 9) / 2, "You lose!");
 			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 36) / 2, "Aperte <enter> para jogar novamente,");
 			mvprintw((mapa_1->getRow() + 3) / 2, (mapa_1->getCol() - 24) / 2, "ou aperte <q> para sair!");
@@ -304,8 +390,8 @@ void game_loop(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arriv
 					if(opt == '\n'){
 						player->setLife(3);
 						player->setScore(0);
-						inser_object(player, bonus, trap, mapa_1, arrival);
-						game_loop(player, bonus, trap, mapa_1, arrival);
+						inser_object_1(player, bonus, trap, mapa_1, arrival);
+						game_loop_1(player, bonus, trap, mapa_1, arrival);
 					}
 					else if(opt == 'q' || opt == 'Q'){
 						menu(player, bonus, trap, mapa_1, arrival);
@@ -321,5 +407,211 @@ void game_loop(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arriv
 			ch = getch();
 
 		mvprintw((mapa_1->getRow() + 1), ((mapa_1->getCol() - 38) / 2), "                                              ");
+	}
+}
+
+void inser_object_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
+	clear();
+
+	for(int i = 0; i < tam_object; ++i){
+		bonus[i] = new Bonus();
+		trap[i] = new Trap();
+	}
+
+
+	mvprintw(0, (mapa_1->getCol() - mapa_1->getCol()), "Score: %d", player->getScore());
+	mvprintw(0, ((mapa_1->getCol() + 13) - length(player->getNome()) ) / 2, "%s", player->getNome());
+	mvprintw(0, 50, "Life: ");
+	player->life_d_2(player->getLife());
+
+	mapa_1->imprimir_mapa_2();
+
+	mvaddch(player->getPositionX(), player->getPositionY(), player->getSprite());
+
+	mvaddch(arrival->getPositionY() + 7, arrival->getPositionX() + 12, arrival->getSprite());
+
+	mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 10) / 2), "Aperte <p> para pausar!");
+}
+
+void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
+	int ch = getch();
+	int row = player->getPositionX();
+	int col = player->getPositionY();
+	int opt = ch - 1;
+
+	int j = 0;
+
+	int life = player->getLife();
+	int score = player->getScore();
+
+	for(;;){
+		mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 10) / 2), "Aperte <p> para pausar!");
+
+		if((j%5) == 0)
+			for(int i = 0; i < tam_object; ++i){
+				randObject(bonus, i);
+				randObject(trap, i);
+			}		
+
+		switch(ch){
+			case KEY_LEFT:
+				if(mvinch(row, col-1) == '-' || mvinch(row, col-1) == '|')
+					refresh();
+				else{
+					if(mvinch(row, col-1) == '$')
+						player->setScore(player->getScore() + 5);
+					else if(mvinch(row, col-1) == '*')
+						player->setLife(player->getLife() - trap[0]->getDamage());
+					else if(mvinch(row, col-1) == '#')
+						player->setWinner(true);		
+					erase(row, col, ' ');
+					col = col - 1;
+					mvaddch(row, col, player->getSprite());
+					refresh();
+				}
+				break;
+		
+			case KEY_RIGHT:
+				if(mvinch(row, col + 1) == '-' || mvinch(row, col + 1) == '|' || col == mapa_1->getCol())
+					refresh();
+				else{
+					if(mvinch(row, col + 1) == '$')
+						player->setScore(player->getScore() + 5);
+					else if(mvinch(row, col + 1) == '*')
+						player->setLife(player->getLife() - trap[0]->getDamage());
+					else if(mvinch(row, col + 1) == '#')
+						player->setWinner(true);						
+					erase(row, col, ' ');
+					col = col + 1;
+					mvaddch(row, col, player->getSprite());
+					refresh();
+				}
+				break;
+
+			case KEY_UP:
+				if(mvinch(row - 1, col) == '-' || mvinch(row - 1, col) == '|')
+					refresh();
+				else{
+					if(mvinch(row - 1, col) == '$')
+						player->setScore(player->getScore() + 5);	
+					else if(mvinch(row - 1, col) == '*')
+						player->setLife(player->getLife() - trap[0]->getDamage());
+					else if(mvinch(row - 1, col) == '#')
+						player->setWinner(true);						
+					erase(row, col, ' ');
+					row = row - 1;
+					mvaddch(row, col, player->getSprite());
+					refresh();
+				}
+				break;
+
+			case KEY_DOWN:
+				if(mvinch(row + 1, col) == '-' || mvinch(row + 1, col) == '|')
+					refresh();
+				else{
+					if(mvinch(row + 1, col) == '$')
+						player->setScore(player->getScore() + 5);
+					else if(mvinch(row + 1, col) == '*')
+						player->setLife(player->getLife() - trap[0]->getDamage());
+					else if(mvinch(row + 1, col) == '#')
+						player->setWinner(true);	
+					erase(row, col, ' ');
+					row = row + 1;
+					mvaddch(row, col, player->getSprite());
+					refresh();
+				}
+				break;
+
+			case 'p':
+				mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 30) / 2), "Game Paused! Press <enter> to continue");
+				refresh();
+				
+				while (1){
+					int key_press = getch();
+
+			  		if (key_press == '\n'){
+	  					mvprintw((mapa_1->getRow() + 8), 0, "                                              ");
+						mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 10) / 2), "Aperte <p> para pausar!");
+
+			  			break;
+					}
+			   	}
+				break;
+
+			default:
+
+				break;
+		}
+
+		if((j%5) == 4){
+			for(int i = 0; i < tam_object; ++i){
+				if(mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '@'){
+					erase(bonus[i]->getPositionY(), bonus[i]->getPositionX(), '@');
+					erase(trap[i]->getPositionY(), trap[i]->getPositionX(), ' ');	
+				}
+				else if(mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '@'){
+					erase(trap[i]->getPositionY(), trap[i]->getPositionX(), '@');
+					erase(bonus[i]->getPositionY(), bonus[i]->getPositionX(), ' ');	
+				}											
+				else{
+					erase(bonus[i]->getPositionY(), bonus[i]->getPositionX(), ' ');
+					erase(trap[i]->getPositionY(), trap[i]->getPositionX(), ' ');	
+				}
+			}
+		}
+
+		mvprintw(0, 0, "Score: %d", player->getScore());
+		mvprintw(0, 50, "Life: ");
+		player->life_d_2(player->getLife());
+
+		if(ch == 'q' || ch == 'Q'){
+			menu(player, bonus, trap, mapa_1, arrival);
+			break;
+		}
+
+		if(player->getWinner()){
+			inser_ranking(player);
+
+			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 22) / 2, "Parabens! Você ganhou.");
+			refresh();
+
+			player->setLife(3);
+			player->setScore(0);
+
+			getch();
+
+			menu(player, bonus, trap, mapa_1, arrival);
+			return;
+		}
+
+		if(player->getLife() == 0){
+			mvprintw(mapa_1->getRow() / 2, (mapa_1->getCol() - 9) / 2, "You lose!");
+			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 36) / 2, "Aperte <enter> para jogar novamente,");
+			mvprintw((mapa_1->getRow() + 3) / 2, (mapa_1->getCol() - 24) / 2, "ou aperte <q> para sair!");
+
+			opt = getch();
+
+			if(opt == '\n'){
+				player->setLife(life);
+				player->setScore(score);
+				inser_object_2(player, bonus, trap, mapa_1, arrival);
+				game_loop_2(player, bonus, trap, mapa_1, arrival);
+			}
+			else if(opt == 'q' || opt == 'Q'){
+				menu(player, bonus, trap, mapa_1, arrival);
+				return;
+			}
+			else
+				ch = '/';
+		}
+		if(opt == 'q')
+			ch = opt;
+		else
+			ch = getch();
+
+		mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 38) / 2), "                                              ");	
+		
+		refresh();
+		++j;
 	}
 }

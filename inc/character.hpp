@@ -14,6 +14,8 @@ public:
 	int getLife();
 
 	void life_d(int);
+	void life_d_2(int);
+
 };
 
 #endif

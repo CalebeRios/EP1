@@ -28,3 +28,13 @@ void Character::life_d(int life){
 	else if(life == 3)
 		mvprintw(0, 44, "***\n");
 }
+
+void Character::life_d_2(int life){
+	if(life == 1)
+		mvprintw(0, 56, "*\n");
+	else if(life == 2)
+		mvprintw(0, 56, "**\n");
+	else if(life == 3)
+		mvprintw(0, 56, "***\n");
+}
+
