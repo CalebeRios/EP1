@@ -16,9 +16,8 @@ using namespace std;
 void menu(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 void inser_object_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 void inser_object_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
-void randObject(Bonus *bonus[], int i);
-void randObject(Trap *trap[], int i);
-//void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
+void randObject(Bonus *bonus[], int i, int row, int col);
+void randObject(Trap *trap[], int i, int row, int col);
 void inser_ranking(Player *player);
 void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
@@ -170,13 +169,13 @@ void inser_object_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, 
 	mvprintw((mapa_1->getRow() + 1), ((mapa_1->getCol() - 23) / 2), "Aperte <p> para pausar!");
 }
 
-void randObject(Bonus *bonus[], int i){
+void randObject(Bonus *bonus[], int i, int row, int col){
 	srand((unsigned) time(NULL));
 
 	bonus[i]->setPositionY(trand(32));
 	bonus[i]->setPositionX(trand(58));
 
-	while(mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '-' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '$' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '|' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '#' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '*' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '+'){
+	while(mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '-' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '$' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '|' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '#' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '*' || mvinch(bonus[i]->getPositionY(), bonus[i]->getPositionX()) == '+' || bonus[i]->getPositionY() == row + 1 || bonus[i]->getPositionY() == row - 1 || bonus[i]->getPositionX() == col + 1 || bonus[i]->getPositionX() == col - 1){
 		bonus[i]->setPositionY(trand(32));
 		bonus[i]->setPositionX(trand(58));
 	}
@@ -184,13 +183,13 @@ void randObject(Bonus *bonus[], int i){
 	mvaddch(bonus[i]->getPositionY(), bonus[i]->getPositionX(), bonus[i]->getSprite());
 }
 
-void randObject(Trap *trap[], int i){
+void randObject(Trap *trap[], int i, int row, int col){
 	srand((unsigned) time(NULL));
 
 	trap[i]->setPositionY(trand(32));
 	trap[i]->setPositionX(trand(58));
 
-	while(mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '-' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '$' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '|' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '#' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '*' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '+'){
+	while(mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '-' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '$' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '|' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '#' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '*' || mvinch(trap[i]->getPositionY(), trap[i]->getPositionX()) == '+' || trap[i]->getPositionY() == row + 1 || trap[i]->getPositionY() == row - 1 || trap[i]->getPositionX() == col + 1 || trap[i]->getPositionX() == col - 1){
 		trap[i]->setPositionY(trand(32));
 		trap[i]->setPositionX(trand(58));
 	}
@@ -198,19 +197,6 @@ void randObject(Trap *trap[], int i){
 	mvaddch(trap[i]->getPositionY(), trap[i]->getPositionX(), trap[i]->getSprite());
 }
 
-/*void destr_object(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
-	player->~Player();
-	trap[0]->~Trap();
-	trap[1]->~Trap();
-	trap[2]->~Trap();
-	trap[3]->~Trap();
-	trap[4]->~Trap();
-	bonus[0]->~Bonus();
-	bonus[1]->~Bonus();
-	bonus[2]->~Bonus();
-	mapa_1->~Mapa();
-	arrival->~Arrival();
-}*/
 
 void inser_ranking(Player *player){
 		ofstream ranking;
@@ -221,7 +207,7 @@ void inser_ranking(Player *player){
 		ranking.write(player->getNome(), sizeof(player->getNome()));
 		tam = length(player->getNome());
 
-		for(int i = 0; i < 17 - tam; ++i)
+		for(int i = 0; i < 13 - tam; ++i)
 			ranking.put(' ');
 		
 		ranking << player->getScore() << endl;
@@ -428,7 +414,7 @@ void inser_object_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, 
 
 	mvaddch(player->getPositionX(), player->getPositionY(), player->getSprite());
 
-	mvaddch(arrival->getPositionY() + 7, arrival->getPositionX() + 12, arrival->getSprite());
+	mvaddch(arrival->getPositionY() - 6, arrival->getPositionX() + 12, arrival->getSprite());
 
 	mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 10) / 2), "Aperte <p> para pausar!");
 }
@@ -449,8 +435,8 @@ void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 
 		if((j%5) == 0)
 			for(int i = 0; i < tam_object; ++i){
-				randObject(bonus, i);
-				randObject(trap, i);
+				randObject(bonus, i, row, col);
+				randObject(trap, i, row, col);
 			}		
 
 		switch(ch){
