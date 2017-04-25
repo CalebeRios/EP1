@@ -10,7 +10,7 @@ private:
 	char sprite;
 public:
 	GameObject();
-	~GameObject();
+	virtual ~GameObject() = 0;
 
 	void setPositionX(int);
 	int getPositionX();
