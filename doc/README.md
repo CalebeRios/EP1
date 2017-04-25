@@ -1,4 +1,5 @@
 Repositório do EP1, projeto da disciplina de OO da FGA, do semestre 1/2017.
+Aluno: Calebe Rios de Sousa Mendes			Matricula: 15/0120702
 
 Instruções para instalar a biblioteca Ncurses:
 Ubuntu/Debian: "$ sudo apt-get install libncurses5-dev libncursesw5-dev";
