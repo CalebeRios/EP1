@@ -14,4 +14,4 @@ clean:
 	rm -rf ../obj/*
 	rm -rf ../bin/*
 run: 
-	sudo ../bin/saida
+	../bin/saida

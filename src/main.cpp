@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <unistd.h>
+#include <string.h>
 #define tam_object 30
 
 using namespace std;
@@ -21,7 +22,6 @@ void randObject(Trap *trap[], int i, int row, int col);
 void inser_ranking(Player *player);
 void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
-//void sortRanking();
 
 void erase (int y, int x, char ch) {
  	mvaddch(y, x, ch);
@@ -167,6 +167,11 @@ void inser_object_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, 
 	mvaddch(trap[4]->getPositionX(), trap[4]->getPositionY(), trap[4]->getSprite());
 
 	mvprintw((mapa_1->getRow() + 1), ((mapa_1->getCol() - 23) / 2), "Aperte <p> para pausar!");
+	mvprintw((mapa_1->getRow() + 2), ((mapa_1->getCol() - 7) / 2), "Legenda");
+	mvprintw((mapa_1->getRow() + 3), ((mapa_1->getCol() - 23) / 2), "@ - Player");
+	mvprintw((mapa_1->getRow() + 4), ((mapa_1->getCol() - 23) / 2), "$ - Bonus");
+	mvprintw((mapa_1->getRow() + 5), ((mapa_1->getCol() - 23) / 2), "* - Trap");
+	mvprintw((mapa_1->getRow() + 6), ((mapa_1->getCol() - 23) / 2), "'q' - Sair");
 }
 
 void randObject(Bonus *bonus[], int i, int row, int col){
@@ -197,7 +202,6 @@ void randObject(Trap *trap[], int i, int row, int col){
 	mvaddch(trap[i]->getPositionY(), trap[i]->getPositionX(), trap[i]->getSprite());
 }
 
-
 void inser_ranking(Player *player){
 		ofstream ranking;
 		int tam;
@@ -216,22 +220,6 @@ void inser_ranking(Player *player){
 		ranking.close();
 }
 
-/*void sortRanking(){
-	ifstream ranking;
-	char nome[8];
-	char nome_aux[8];
-	int i = 1;
-	
-	ranking.open("../doc/ranking.txt");
-
-	while(ranking.eof()){
-		getline(nome);
-		++i;
-	}
-
-	ranking.close();
-}*/
-
 void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
 	int ch = getch();
 	int row = player->getPositionX();
@@ -240,7 +228,7 @@ void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 
 	for(;;){
 		mvprintw((mapa_1->getRow() + 1), ((mapa_1->getCol() - 23) / 2), "Aperte <p> para pausar!");
-
+		
 		switch(ch){
 			case KEY_LEFT:
 				if(mvinch(row, col-1) == '-' || mvinch(row, col-1) == '|')
@@ -346,32 +334,34 @@ void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 
 			opc = getch();
 
-			if(opc == 'q' || opc == 'Q'){
-				inser_ranking(player);
-				menu(player, bonus, trap, mapa_1, arrival);
+			while(1){
+				if(opc == 'q' || opc == 'Q'){
+					menu(player, bonus, trap, mapa_1, arrival);
+				}
+				else if(opc == '\n'){
+					clear();
+
+					mvprintw(10, 15, "Fase 2");
+					refresh();
+
+					sleep(2);
+
+					Trap *trap[tam_object];
+					Bonus *bonus[tam_object];
+
+					inser_object_2(player, bonus, trap, mapa_1, arrival);
+					game_loop_2(player, bonus, trap, mapa_1, arrival);					
+				}
+				opc = getch();
 			}
+				return;
 
-			clear();
-
-			mvprintw(10, 15, "Fase 2");
-			refresh();
-
-			sleep(2);
-
-			Trap *trap[tam_object];
-			Bonus *bonus[tam_object];
-
-			inser_object_2(player, bonus, trap, mapa_1, arrival);
-			game_loop_2(player, bonus, trap, mapa_1, arrival);
-
-			return;
 		}
 
 		if(player->getLife() == 0){
 			mvprintw(mapa_1->getRow() / 2, (mapa_1->getCol() - 9) / 2, "You lose!");
 			mvprintw((mapa_1->getRow() + 1) / 2, (mapa_1->getCol() - 36) / 2, "Aperte <enter> para jogar novamente,");
 			mvprintw((mapa_1->getRow() + 3) / 2, (mapa_1->getCol() - 24) / 2, "ou aperte <q> para sair!");
-			//while(1){
 				opt = getch();
 					if(opt == '\n'){
 						player->setLife(3);
@@ -385,7 +375,6 @@ void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 					}
 					else
 						ch = '/';
-			//}
 		}
 		if(opt == 'q')
 			ch = opt;
@@ -417,6 +406,11 @@ void inser_object_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, 
 	mvaddch(arrival->getPositionY() - 6, arrival->getPositionX() + 12, arrival->getSprite());
 
 	mvprintw((mapa_1->getRow() + 8), ((mapa_1->getCol() - 10) / 2), "Aperte <p> para pausar!");
+	mvprintw((mapa_1->getRow() + 9), ((mapa_1->getCol() - 7) / 2), "Legenda");
+	mvprintw((mapa_1->getRow() + 10), ((mapa_1->getCol() - 10) / 2), "@ - Player");
+	mvprintw((mapa_1->getRow() + 11), ((mapa_1->getCol() - 10) / 2), "$ - Bonus");
+	mvprintw((mapa_1->getRow() + 12), ((mapa_1->getCol() - 10) / 2), "* - Trap");
+	mvprintw((mapa_1->getRow() + 13), ((mapa_1->getCol() - 10) / 2), "'q' - Sair");
 }
 
 void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival){
