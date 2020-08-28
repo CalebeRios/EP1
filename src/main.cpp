@@ -25,7 +25,6 @@ void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arr
 
 void erase (int y, int x, char ch) {
  	mvaddch(y, x, ch);
-	mvaddch(y, x, ch);
 }
 
 int length(char *nome){
