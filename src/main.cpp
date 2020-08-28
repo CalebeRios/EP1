@@ -23,10 +23,6 @@ void inser_ranking(Player *player);
 void game_loop_1(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 void game_loop_2(Player *player, Bonus *bonus[], Trap *trap[], Mapa *mapa_1, Arrival *arrival);
 
-void erase (int y, int x, char ch) {
- 	mvaddch(y, x, ch);
-}
-
 int length(char *nome){
 	int len = 0;
 	while(nome[len] != '\0'){
